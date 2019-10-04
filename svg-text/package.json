@@ -1,0 +1,17 @@
+{
+  "name": "svg-text",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "html2jade": "^0.8.6",
+    "text-to-svg": "^3.1.5",
+    "vtop": "^0.6.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
