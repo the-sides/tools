@@ -1,5 +1,4 @@
-import urllib.request
-import argparse
+import urllib.request, argparse, re
 from pprint import pprint
 from bs4 import BeautifulSoup
 from html_table_extractor.extractor import Extractor
@@ -14,6 +13,14 @@ def url_get_contents(url):
 def readFile(filename):
     with open(filename, 'r') as fin:
         return fin.read()
+
+def cleanRange(val):
+    if 'kg' in val:
+        val = val.split('-')
+        return re.sub('[^0-9]','',val[0]),re.sub('[^0-9]','',val[1])
+    else:
+        return '',''
+
 
 def processTable(table, sku):
     # Read first row, which will be X-axis labels
@@ -30,9 +37,12 @@ def processTable(table, sku):
     #                              V : skip header row
     for i, row in enumerate(table[1:]):
         yVal = row[1]
+        yValMin, yValMax = cleanRange(yVal)
         for j, cell in enumerate(row[yaxisN:]):
+            if cell == 'NA': 
+                continue
             xVal = xaxisVals[j]
-            xdict[xVal].append(sku+cell)
+            xdict[xVal].append((sku+cell, xVal, yValMin, yValMax))
             print("{}:{} = {}".format(xVal, yVal, cell))
 
 
@@ -44,7 +54,7 @@ def outputProductSkus(table):
         
         print("Size: {}".format(size))
         for val in vals:
-            print("{}".format(val))
+            print("{}\t{}\t{}\t{}".format(val[0], val[1], val[2], val[3]))
 
 def main():
     # Parse arguments
