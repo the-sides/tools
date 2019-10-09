@@ -21,6 +21,43 @@ def cleanRange(val):
     else:
         return '',''
 
+class product:
+    sku = ''
+    size = ''
+    minWeight = ''
+    maxWeight = ''
+    duplicate = False
+    def __init__(self, skuIn, sizeIn, minWeightIn, maxWeightIn):
+        self.sku = skuIn  
+        self.size = sizeIn  
+        self.minWeight = minWeightIn  
+        self.maxWeight = maxWeightIn  
+
+    def printProduct(self):
+        if not self.duplicate:
+            print("{}\t{}\t{}\t{}".format(self.sku, self.size, self.minWeight, self.maxWeight))
+
+
+def combineWeightRanges(gimmeThatDict):
+    for i, sizeCol in gimmeThatDict.items():
+        prevProd = sizeCol[0]
+        newMax = -1
+        for j, crntProd in enumerate(sizeCol[1:]):
+            if crntProd.sku == prevProd.sku:
+                # We're continuing a single product, objects need to be combined
+                newMax = crntProd.maxWeight
+                crntProd.duplicate = True
+            else:
+                # Set the first product of the set of duplicates to include the complete range
+                prevProd.maxWeight = newMax
+                # Restart search criteria
+                prevProd = crntProd
+                newMax = crntProd.maxWeight
+    return gimmeThatDict
+
+
+
+
 
 def processTable(table, sku):
     # Read first row, which will be X-axis labels
@@ -42,19 +79,28 @@ def processTable(table, sku):
             if cell == 'NA': 
                 continue
             xVal = xaxisVals[j]
-            xdict[xVal].append((sku+cell, xVal, yValMin, yValMax))
-            print("{}:{} = {}".format(xVal, yVal, cell))
+            obj = product(sku+cell, xVal, yValMin, yValMax)
+            xdict[xVal].append(obj)
+            # print("{}:{} = {}".format(xVal, yVal, cell))
 
 
     return xdict
     
 
 def outputProductSkus(table):
-    for size, vals in table.items():
+    for key, vals in table.items():
         
-        print("Size: {}".format(size))
-        for val in vals:
-            print("{}\t{}\t{}\t{}".format(val[0], val[1], val[2], val[3]))
+        # print("Size: {}".format(key))
+        duplicates = 0
+        maxWeight = 0
+        for j, val in enumerate(vals):
+            # maxWeight = val[3]
+            # while duplicates > 0:
+            #     duplicates -= 1
+            #     continue
+            # if(val[0] == vals[j+1])
+            val.printProduct()
+            # print("{}\t{}\t{}\t{}".format(val[0], val[1], val[2], val[3]))
 
 def main():
     # Parse arguments
@@ -63,6 +109,7 @@ def main():
     parser.add_argument('-f', nargs=1, default=None, help='HTML Content Input File')
     parser.add_argument('-o', nargs=1, default=None, help='Output File')
     parser.add_argument('-s', nargs=1, default=None, help='SKU Outline')
+    parser.add_argument('--table-index', nargs=1, default=None, help='Which table in order of appearance to pull')
 
     args = parser.parse_args()
 
@@ -85,17 +132,18 @@ def main():
         print("Table: {}    Rows: {}   Cols: {}".format(i, len(table), len(table[0])))
         cleanTables.append(table)
 
-    tableIndex = input("Which table do you want to process with SKU: {}\n".format(sku))
-    tableIndex = int(tableIndex)
+    try:
+        tableIndex = int(args.table_index[0])
+    except:
+        tableIndex = int(input("Which table do you want to process with SKU: {}\n".format(sku)))
 
-    # pprint(cleanTables[tableIndex])
      
-    skus = processTable(cleanTables[tableIndex], sku)
+    products = processTable(cleanTables[tableIndex], sku)
+    outputProductSkus(products)
 
-    outputProductSkus(skus)
-    # pprint(cleanedTable)
-    # # pprint(tables[0])
-    # pprint(p.tables)
+    products = combineWeightRanges(products)
+    outputProductSkus(products)
+
 
 
 if __name__ == '__main__':
