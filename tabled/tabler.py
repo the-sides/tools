@@ -41,7 +41,7 @@ class product:
 def combineWeightRanges(gimmeThatDict):
     for i, sizeCol in gimmeThatDict.items():
         prevProd = sizeCol[0]
-        newMax = -1
+        newMax = prevProd.maxWeight
         for j, crntProd in enumerate(sizeCol[1:]):
             if crntProd.sku == prevProd.sku:
                 # We're continuing a single product, objects need to be combined
