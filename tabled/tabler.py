@@ -140,6 +140,9 @@ def main():
      
     products = processTable(cleanTables[tableIndex], sku)
     outputProductSkus(products)
+    print('='*64)
+    print('{}Now without those pesky duplicates'.format(' '*16))
+    print('='*64)
 
     products = combineWeightRanges(products)
     outputProductSkus(products)
