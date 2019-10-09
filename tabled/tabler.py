@@ -15,9 +15,36 @@ def readFile(filename):
     with open(filename, 'r') as fin:
         return fin.read()
 
-def processTable(table):
+def processTable(table, sku):
     # Read first row, which will be X-axis labels
+    yaxisN = 0
+    xaxisVals = table[0]
+    xdict = {}
+    for i, label in enumerate(xaxisVals):
+        if label == '\xa0':
+            yaxisN += 1
+        else:
+            xdict[label] = []
+    xaxisVals = xaxisVals[yaxisN:]
+
+    #                              V : skip header row
+    for i, row in enumerate(table[1:]):
+        yVal = row[1]
+        for j, cell in enumerate(row[yaxisN:]):
+            xVal = xaxisVals[j]
+            xdict[xVal].append(sku+cell)
+            print("{}:{} = {}".format(xVal, yVal, cell))
+
+
+    return xdict
     
+
+def outputProductSkus(table):
+    for size, vals in table.items():
+        
+        print("Size: {}".format(size))
+        for val in vals:
+            print("{}".format(val))
 
 def main():
     # Parse arguments
@@ -30,6 +57,7 @@ def main():
     args = parser.parse_args()
 
     url = args.u[0]
+    sku = args.s[0]
     if url:
         xhtml = url_get_contents(url).decode('utf-8')
     else: 
@@ -47,12 +75,14 @@ def main():
         print("Table: {}    Rows: {}   Cols: {}".format(i, len(table), len(table[0])))
         cleanTables.append(table)
 
-    tableIndex = input("Which table do you want to process with SKU: {}\n".format(args.s[0]))
+    tableIndex = input("Which table do you want to process with SKU: {}\n".format(sku))
     tableIndex = int(tableIndex)
 
-    pprint(cleanTables[tableIndex])
+    # pprint(cleanTables[tableIndex])
      
-    processTable(cleanTables[tableIndex])
+    skus = processTable(cleanTables[tableIndex], sku)
+
+    outputProductSkus(skus)
     # pprint(cleanedTable)
     # # pprint(tables[0])
     # pprint(p.tables)
