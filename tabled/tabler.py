@@ -3,6 +3,7 @@ from pprint import pprint
 from bs4 import BeautifulSoup
 from html_table_extractor.extractor import Extractor
 
+debug = True
 
 def url_get_contents(url):
     """ Opens a website and read its binary contents (HTTP Response Body) """
@@ -41,18 +42,14 @@ class product:
 def combineWeightRanges(gimmeThatDict):
     for i, sizeCol in gimmeThatDict.items():
         prevProd = sizeCol[0]
-        newMax = prevProd.maxWeight
         for j, crntProd in enumerate(sizeCol[1:]):
             if crntProd.sku == prevProd.sku:
                 # We're continuing a single product, objects need to be combined
-                newMax = crntProd.maxWeight
+                prevProd.maxWeight = crntProd.maxWeight
                 crntProd.duplicate = True
             else:
-                # Set the first product of the set of duplicates to include the complete range
-                prevProd.maxWeight = newMax
                 # Restart search criteria
                 prevProd = crntProd
-                newMax = crntProd.maxWeight
     return gimmeThatDict
 
 
@@ -91,16 +88,8 @@ def outputProductSkus(table):
     for key, vals in table.items():
         
         # print("Size: {}".format(key))
-        duplicates = 0
-        maxWeight = 0
-        for j, val in enumerate(vals):
-            # maxWeight = val[3]
-            # while duplicates > 0:
-            #     duplicates -= 1
-            #     continue
-            # if(val[0] == vals[j+1])
+        for val in vals:
             val.printProduct()
-            # print("{}\t{}\t{}\t{}".format(val[0], val[1], val[2], val[3]))
 
 def main():
     # Parse arguments
@@ -109,7 +98,7 @@ def main():
     parser.add_argument('-f', nargs=1, default=None, help='HTML Content Input File')
     parser.add_argument('-o', nargs=1, default=None, help='Output File')
     parser.add_argument('-s', nargs=1, default=None, help='SKU Outline')
-    parser.add_argument('--table-index', nargs=1, default=None, help='Which table in order of appearance to pull')
+    parser.add_argument('-t', nargs=1, default=None, help='Which table in order of appearance to pull')
 
     args = parser.parse_args()
 
@@ -133,7 +122,7 @@ def main():
         cleanTables.append(table)
 
     try:
-        tableIndex = int(args.table_index[0])
+        tableIndex = int(args.t[0])
     except:
         tableIndex = int(input("Which table do you want to process with SKU: {}\n".format(sku)))
 
