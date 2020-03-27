@@ -2,4 +2,5 @@ node_modules
 
 image-ripper/pics
 image-ripper/urls*
+moar-units/sheet.csv
 .DS_Store
