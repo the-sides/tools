@@ -1,15 +1,22 @@
 import React from 'react';
-import type { BurnerState } from '../../types/recipe';
+import type { BurnerState, Cookware, Ingredient } from '../../types/recipe';
 import Burner from './Burner';
 
 interface StovetopProps {
   burners: BurnerState[];
+  cookware: Cookware[];
+  ingredients: Ingredient[];
 }
 
-const Stovetop: React.FC<StovetopProps> = ({ burners }) => {
+const Stovetop: React.FC<StovetopProps> = ({ burners, cookware, ingredients }) => {
   // Find burner by position
   const getBurner = (position: string) => {
     return burners.find(b => b.position === position);
+  };
+
+  // Find cookware for a specific burner
+  const getCookwareForBurner = (position: string) => {
+    return cookware.find(cw => cw.burner === position);
   };
 
   return (
@@ -36,12 +43,28 @@ const Stovetop: React.FC<StovetopProps> = ({ burners }) => {
         {/* Burner grid */}
         <div className="grid grid-cols-2 gap-12 p-4">
           {/* Back row */}
-          <Burner burner={getBurner('back-left')} />
-          <Burner burner={getBurner('back-right')} />
+          <Burner
+            burner={getBurner('back-left')}
+            cookware={getCookwareForBurner('back-left')}
+            ingredients={ingredients}
+          />
+          <Burner
+            burner={getBurner('back-right')}
+            cookware={getCookwareForBurner('back-right')}
+            ingredients={ingredients}
+          />
 
           {/* Front row */}
-          <Burner burner={getBurner('front-left')} />
-          <Burner burner={getBurner('front-right')} />
+          <Burner
+            burner={getBurner('front-left')}
+            cookware={getCookwareForBurner('front-left')}
+            ingredients={ingredients}
+          />
+          <Burner
+            burner={getBurner('front-right')}
+            cookware={getCookwareForBurner('front-right')}
+            ingredients={ingredients}
+          />
         </div>
       </div>
 

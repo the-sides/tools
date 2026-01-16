@@ -10,7 +10,6 @@ interface CookwareDisplayProps {
 const CookwareDisplay: React.FC<CookwareDisplayProps> = ({
   cookware,
   ingredients,
-  position = { x: 0, y: 0 }
 }) => {
   // Get ingredients that are in this cookware
   const contentsIngredients = ingredients.filter(ing =>
@@ -167,13 +166,7 @@ const CookwareDisplay: React.FC<CookwareDisplayProps> = ({
   };
 
   return (
-    <div
-      className="absolute transition-all duration-700 ease-in-out"
-      style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-      }}
-    >
+    <div className="relative">
       {renderCookware()}
 
       {/* Cookware label */}

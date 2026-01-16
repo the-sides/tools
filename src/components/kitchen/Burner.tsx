@@ -1,11 +1,14 @@
 import React from 'react';
-import type { BurnerState, HeatLevel } from '../../types/recipe';
+import type { BurnerState, HeatLevel, Cookware, Ingredient } from '../../types/recipe';
+import CookwareDisplay from './CookwareDisplay';
 
 interface BurnerProps {
   burner?: BurnerState;
+  cookware?: Cookware;
+  ingredients: Ingredient[];
 }
 
-const Burner: React.FC<BurnerProps> = ({ burner }) => {
+const Burner: React.FC<BurnerProps> = ({ burner, cookware, ingredients }) => {
   const heatLevel = burner?.heatLevel || 'off';
 
   // Calculate visual properties based on heat level
@@ -60,7 +63,7 @@ const Burner: React.FC<BurnerProps> = ({ burner }) => {
   const isOn = heatLevel !== 'off';
 
   return (
-    <div className="relative flex items-center justify-center">
+    <div className="relative flex items-center justify-center min-h-[240px]">
       {/* Burner base */}
       <div className="relative w-32 h-32 rounded-full bg-gray-900 border-2 border-gray-600 flex items-center justify-center">
         {/* Heat rings */}
@@ -98,9 +101,20 @@ const Burner: React.FC<BurnerProps> = ({ burner }) => {
         )}
       </div>
 
-      {/* Cookware will be placed above this */}
-      {burner?.cookwareId && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-2 h-2 bg-blue-400 rounded-full shadow-lg shadow-blue-400/50" />
+      {/* Cookware positioned on top of burner with animation */}
+      {cookware && (
+        <div
+          className="absolute -top-12 left-1/2 -translate-x-1/2 z-20 animate-in fade-in zoom-in duration-500"
+          style={{
+            animationFillMode: 'both'
+          }}
+        >
+          <CookwareDisplay
+            cookware={cookware}
+            ingredients={ingredients}
+            position={{ x: 0, y: 0 }}
+          />
+        </div>
       )}
     </div>
   );
