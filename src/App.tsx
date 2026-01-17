@@ -9,6 +9,7 @@ import { recipes } from './data/sampleRecipe';
 
 function App() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe>(recipes[0]);
+  const [showIngredients, setShowIngredients] = useState(false);
 
   const {
     currentTime,
@@ -34,20 +35,20 @@ function App() {
   }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white p-2 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <header className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+        {/* Compact Header */}
+        <header className="text-center mb-3 md:mb-8">
+          <h1 className="text-2xl md:text-5xl font-bold mb-1 md:mb-3 bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
             Visual Recipe Guide
           </h1>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-400 text-xs md:text-lg hidden md:block">
             Follow along step-by-step as your meal comes to life
           </p>
         </header>
 
-        {/* Recipe selector */}
-        <div className="mb-8 flex justify-center gap-4">
+        {/* Compact Recipe selector */}
+        <div className="mb-3 md:mb-8 flex justify-center gap-2 md:gap-4">
           {recipes.map(recipe => (
             <button
               key={recipe.id}
@@ -55,7 +56,7 @@ function App() {
                 setSelectedRecipe(recipe);
                 reset();
               }}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+              className={`px-3 py-1.5 md:px-6 md:py-3 rounded-lg text-xs md:text-base font-medium transition-all duration-200 ${
                 selectedRecipe.id === recipe.id
                   ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50'
                   : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
@@ -67,9 +68,9 @@ function App() {
         </div>
 
         {/* Main content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-          {/* Left sidebar - Ingredients */}
-          <div className="lg:col-span-1">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-8 mb-3 md:mb-8">
+          {/* Left sidebar - Ingredients (hidden on mobile by default) */}
+          <div className="lg:col-span-1 hidden lg:block">
             <IngredientList
               ingredients={ingredientsWithStates}
               usedIngredients={usedIngredients}
@@ -110,8 +111,34 @@ function App() {
           </div>
         </div>
 
+        {/* Collapsible ingredients on mobile */}
+        <div className="lg:hidden mb-3">
+          <button
+            onClick={() => setShowIngredients(!showIngredients)}
+            className="w-full bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between"
+          >
+            <span>Ingredients ({ingredientsWithStates.length})</span>
+            <svg
+              className={`w-4 h-4 transition-transform ${showIngredients ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {showIngredients && (
+            <div className="mt-2">
+              <IngredientList
+                ingredients={ingredientsWithStates}
+                usedIngredients={usedIngredients}
+              />
+            </div>
+          )}
+        </div>
+
         {/* Current instructions */}
-        <div className="mb-8">
+        <div className="mb-3 md:mb-8">
           <CurrentInstructions steps={currentSteps} currentTime={currentTime} />
         </div>
 
@@ -127,8 +154,8 @@ function App() {
           onReset={reset}
         />
 
-        {/* Footer */}
-        <footer className="mt-12 text-center text-gray-500 text-sm">
+        {/* Footer - hidden on mobile */}
+        <footer className="mt-6 md:mt-12 text-center text-gray-500 text-xs md:text-sm hidden md:block">
           <p>Visual Recipe Guide - Making cooking easier for everyone</p>
         </footer>
       </div>

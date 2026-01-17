@@ -32,17 +32,17 @@ const PlaybackControls: React.FC<PlaybackControlsProps> = ({
   const speeds = [0.5, 1, 2, 5, 10];
 
   return (
-    <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+    <div className="bg-gray-800 rounded-lg shadow-lg p-3 md:p-6">
       {/* Timeline */}
-      <div className="mb-6">
-        <div className="flex justify-between text-sm text-gray-400 mb-2">
+      <div className="mb-3 md:mb-6">
+        <div className="flex justify-between text-xs md:text-sm text-gray-400 mb-1 md:mb-2">
           <span>{formatTime(currentTime)}</span>
           <span>{formatTime(totalTime)}</span>
         </div>
 
         {/* Progress bar */}
         <div
-          className="relative w-full h-3 bg-gray-700 rounded-full cursor-pointer overflow-hidden group"
+          className="relative w-full h-2 md:h-3 bg-gray-700 rounded-full cursor-pointer overflow-hidden group"
           onClick={(e) => {
             const rect = e.currentTarget.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -68,19 +68,19 @@ const PlaybackControls: React.FC<PlaybackControlsProps> = ({
       </div>
 
       {/* Controls */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-2 md:gap-4">
         {/* Left: Play/Pause and Reset */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
           <button
             onClick={onPlayPause}
-            className="w-14 h-14 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+            className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
           >
             {isPlaying ? (
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
               </svg>
             ) : (
-              <svg className="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 md:w-6 md:h-6 ml-0.5 md:ml-1" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
               </svg>
             )}
@@ -88,17 +88,17 @@ const PlaybackControls: React.FC<PlaybackControlsProps> = ({
 
           <button
             onClick={onReset}
-            className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 text-white flex items-center justify-center transition-all duration-200"
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-700 hover:bg-gray-600 text-white flex items-center justify-center transition-all duration-200"
             title="Reset to beginning"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
           </button>
         </div>
 
-        {/* Center: Current status */}
-        <div className="flex-1 text-center">
+        {/* Center: Current status - hidden on mobile */}
+        <div className="flex-1 text-center hidden md:block">
           <div className="text-sm text-gray-400">
             {isPlaying ? (
               <span className="flex items-center justify-center gap-2">
@@ -112,14 +112,14 @@ const PlaybackControls: React.FC<PlaybackControlsProps> = ({
         </div>
 
         {/* Right: Speed control */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-400">Speed:</span>
-          <div className="flex gap-1">
-            {speeds.map((speed) => (
+        <div className="flex items-center gap-1 md:gap-2">
+          <span className="text-xs md:text-sm text-gray-400 hidden md:inline">Speed:</span>
+          <div className="flex gap-0.5 md:gap-1">
+            {speeds.filter(s => s === 1 || s === 2 || s === 5).map((speed) => (
               <button
                 key={speed}
                 onClick={() => onSpeedChange(speed)}
-                className={`px-3 py-1 rounded text-sm font-medium transition-all duration-200 ${
+                className={`px-2 py-0.5 md:px-3 md:py-1 rounded text-xs md:text-sm font-medium transition-all duration-200 ${
                   playbackSpeed === speed
                     ? 'bg-orange-500 text-white shadow-lg'
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
