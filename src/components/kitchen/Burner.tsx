@@ -63,9 +63,9 @@ const Burner: React.FC<BurnerProps> = ({ burner, cookware, ingredients }) => {
   const isOn = heatLevel !== 'off';
 
   return (
-    <div className="relative flex items-center justify-center min-h-[240px]">
+    <div className="relative flex items-center justify-center min-h-[140px] md:min-h-[240px]">
       {/* Burner base */}
-      <div className="relative w-32 h-32 rounded-full bg-gray-900 border-2 border-gray-600 flex items-center justify-center">
+      <div className="relative w-20 h-20 md:w-32 md:h-32 rounded-full bg-gray-900 border border-gray-600 md:border-2 flex items-center justify-center">
         {/* Heat rings */}
         {isOn && (
           <div className={`absolute inset-0 rounded-full ${visuals.animate}`}>
@@ -88,10 +88,10 @@ const Burner: React.FC<BurnerProps> = ({ burner, cookware, ingredients }) => {
         )}
 
         {/* Burner grate */}
-        <div className="relative z-10 w-28 h-28 rounded-full border-4 border-gray-700 flex items-center justify-center">
-          <div className="w-20 h-20 rounded-full border-4 border-gray-700 flex items-center justify-center">
+        <div className="relative z-10 w-16 h-16 md:w-28 md:h-28 rounded-full border-2 md:border-4 border-gray-700 flex items-center justify-center">
+          <div className="w-12 h-12 md:w-20 md:h-20 rounded-full border-2 md:border-4 border-gray-700 flex items-center justify-center">
             {/* Center hole */}
-            <div className="w-8 h-8 rounded-full bg-gray-950" />
+            <div className="w-4 h-4 md:w-8 md:h-8 rounded-full bg-gray-950" />
           </div>
         </div>
 
@@ -104,7 +104,7 @@ const Burner: React.FC<BurnerProps> = ({ burner, cookware, ingredients }) => {
       {/* Cookware positioned on top of burner with animation */}
       {cookware && (
         <div
-          className="absolute -top-12 left-1/2 -translate-x-1/2 z-20 animate-in fade-in zoom-in duration-500"
+          className="absolute -top-6 md:-top-12 left-1/2 -translate-x-1/2 z-20 animate-in fade-in zoom-in duration-500 scale-75 md:scale-100"
           style={{
             animationFillMode: 'both'
           }}

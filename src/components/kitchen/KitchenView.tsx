@@ -11,19 +11,13 @@ interface KitchenViewProps {
 const KitchenView: React.FC<KitchenViewProps> = ({ burners, cookware, ingredients }) => {
   return (
     <div className="relative w-full">
-      {/* Kitchen title */}
-      <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-white mb-2">Visual Recipe Guide</h2>
-        <p className="text-gray-400">Watch your recipe come to life</p>
-      </div>
-
       {/* Main cooking area */}
-      <div className="relative bg-gradient-to-b from-gray-900 to-gray-800 rounded-2xl p-8 shadow-2xl">
+      <div className="relative bg-gradient-to-b from-gray-900 to-gray-800 rounded-lg md:rounded-2xl p-3 md:p-8 shadow-2xl">
         {/* Stovetop with integrated cookware */}
         <Stovetop burners={burners} cookware={cookware} ingredients={ingredients} />
 
-        {/* Unused cookware display at bottom */}
-        <div className="mt-8 pt-6 border-t border-gray-700">
+        {/* Unused cookware display at bottom - hidden on mobile */}
+        <div className="mt-4 md:mt-8 pt-4 md:pt-6 border-t border-gray-700 hidden md:block">
           <h4 className="text-sm font-medium text-gray-400 mb-3">Available Cookware</h4>
           <div className="flex flex-wrap gap-4 justify-center">
             {cookware
